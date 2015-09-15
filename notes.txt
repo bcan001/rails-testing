@@ -1,0 +1,86 @@
+Random notes about rails testing:
+
+
+basic commands from the command line:
+
+rspec spec                           # All specs
+rspec spec/models                    # All specs in the models directory
+rspec spec/models/a_model_spec.rb    # All specs in the some_model model spec
+rspec spec/models/a_model_spec.rb:nn # Run the spec that includes line 'nn'
+rspec -e"text from a test"           # Runs specs that match the text
+rspec spec --tag focus               # Runs specs that have :focus => true
+rspec spec --tag focus:special       # Run specs that have :focus => special
+rspec spec --tag focus ~skip         # Run tests except those with :focus => true
+
+
+types of tests:
+
+1. feature specs: high level tests that walk through your entire application ensuring that each component works together
+		- written from the perspective of the user clicking around the application / filling in forms
+		- rspec and capybara (allowing js interaction, simulating user activity, actual user interactio with the page)
+
+2. model specs: used to test smaller parts of the system, such as classes or methods
+
+3. controller specs: testing controller functionality, faster than feature specs and are easier to write
+
+4. view specs: test the display of information in your templates
+    - useful for checking the conditional display of your templates, like the proper page title on a page
+
+
+
+
+test doubles and stubs:
+
+test doubles- simple objects that emulate another object in your system
+stubs- given attribute of a test double
+
+test doubles and stubs are useful because sometimes you only need to test one attribute and don't need to load the entire object from a database
+
+example:
+
+car = double(:car)
+car.stub(:max_speed).and_return(120)
+
+
+
+
+-----------
+Notes on testing techniques:
+
+
+technique to test a rails app:
+
+- start testing the views and the models first (at the edges)
+- then start working the controller in the middle
+- get the two ends of the application agreeing with each other first
+
+
+example of outside-in testing using BDD/TDD:
+
+- write a failing acceptance test (view) - needs to loop through the controller and model in order to pass
+- write a failing integration test (controller) - needs to loop through the model in order to pass
+- write a failing unit test (model) - needs to loop through itself in order to pass
+
+
+Behavior-Driven Development:
+
+- BDD focuses TDD to deliver the maximum value possible to stakeholders
+- BDD works from the outside in, that starts with the parts of the software whose behavior is directly perceived by the user
+- refines the language into something that the user can understand
+- start with the user interface
+- BDD specifications follow a format that makes them easy to be driven by your system’s User Stories
+- As a [role], I want [goal] so that [benefit] ——> translates to:
+- Given [role and its state], when [an event/action occurs], then [the benefit]
+
+TDD with RSpec:
+- Rspec: most popular BDD framework for Ruby
+- rspec uses the describe method to create an Example Group
+- Example groups can be nested using the describe or context methods
+- .to eq() is a matcher. rspec comes with lots of matchers (see rspec cheat sheet)
+
+TDD:
+- TDD is not ‘really’ about testing
+- TDD is a design technique
+- TDD leads to cleaner code with separation of concerns
+- Cleaner code is more reliable and easier to maintain
+- stages of TDD are red, green, refactor
